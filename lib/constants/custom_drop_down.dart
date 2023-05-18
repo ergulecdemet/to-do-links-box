@@ -23,7 +23,7 @@ class CustomDropdownButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.sp),
         border: Border.all(
-          color: appColors!.primaryColor,
+          color: appColors!.primaryColor.withOpacity(0.3),
         ),
       ),
       child: Padding(

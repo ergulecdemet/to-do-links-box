@@ -25,12 +25,12 @@ List<String> productLinks = [
   "https://www.trendyol.com/besir-giyim/kadin-siyah-kemerli-deri-mont-ceket-p-93613624",
   "https://www.trendyol.com/besir-giyim/kadin-siyah-kemerli-deri-mont-ceket-p-93613624"
 ];
-List<int> productPriceList = [100, 200, 300, 400];
+List<int> productPriceList = [100, 200, 300, 600];
 List<String> productDateList = ["Bugün", "Dün ", " 19 mayıs", "20 haziran"];
-List<int> productimportList = [1, 2, 3, 1];
+List<String> productImportList = ["⭐", "⭐", "⭐", "⭐"];
+List<String> productCategory = ["Mont", "Ayakkabı ", " Takı"];
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _linkController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<bool> tick = List.generate(productNameList.length, (index) => false);
 
@@ -54,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Align(
           alignment: Alignment.bottomCenter,
           child: LinkAddFloating(
-              formKey: _formKey, linkController: _linkController)),
+            formKey: _formKey,
+            dropdownItems: productCategory,
+          )),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -67,14 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Toplam fiyat :",
+                    "Toplam fiyat : ",
                     style: appTextStyles!.sp12(
                         context,
                         appColors!.greyTextColor.withOpacity(0.3),
                         FontWeight.w600),
                   ),
                   Text(
-                    " 0 TL",
+                    "${totalPrice()} TL",
                     style: appTextStyles!
                         .sp12(context, appColors!.tickColor, FontWeight.w600),
                   )
@@ -101,11 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: CustomToDoBox(
+                              price: productPriceList[index],
                               link: productLinks[index],
                               tick: tick[index],
                               name: productNameList[index],
                               date: productDateList[index],
-                              import: productimportList[index].toString(),
+                              import: productImportList[index].toString(),
                             )),
                         const VerticalSpace(height: 10),
                       ],
@@ -208,5 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  int totalPrice() {
+    var result = 0;
+    for (var i = 0; i < productPriceList.length; i++) {
+      result = productPriceList[i] + result;
+    }
+    return result;
   }
 }

@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:my_links/constants/button_bar.dart';
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/constants.dart';
+import 'package:my_links/constants/custom_drop_down.dart';
 import 'package:my_links/constants/custom_text_formfield.dart';
+import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:sizer/sizer.dart';
 
 class LinkAddFloating extends StatelessWidget {
   LinkAddFloating({
     Key? key,
+    required this.dropdownItems,
     required GlobalKey<FormState> formKey,
-    required TextEditingController linkController,
   })  : _formKey = formKey,
-        _linkController = linkController,
         super(key: key);
 
   final GlobalKey<FormState> _formKey;
-  final TextEditingController _linkController;
+  final TextEditingController _linkController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _detailController = TextEditingController();
+  final List<String> dropdownItems;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -44,6 +46,11 @@ class LinkAddFloating extends StatelessWidget {
                       child: Wrap(
                         runSpacing: 2.h,
                         children: [
+                          CustomDropdownButton(
+                              dropdownItems: dropdownItems,
+                              dropdownValue: "1",
+                              onChanged: (value) {},
+                              hintText: "Bir kategori seçiniz"),
                           CustomTextFormField(
                             hintTex: "Ürün Linki ( https:// )",
                             controller: _linkController,
@@ -77,15 +84,12 @@ class LinkAddFloating extends StatelessWidget {
                               return null;
                             },
                           ),
-                          CustomTextFormField(
-                            hintTex: "Önem Seviyesi",
-                            validator: (p0) {
-                              if (p0!.isEmpty) {
-                                return "Lütfen ürün fiyatı giriniz";
-                              }
-                              return null;
-                            },
-                          ),
+                          const VerticalSpace(height: 8),
+                          CustomDropdownButton(
+                              dropdownItems: const ["⭐", "⭐⭐", "⭐⭐⭐"],
+                              dropdownValue: "1",
+                              onChanged: (value) {},
+                              hintText: "Önem Seviyesi (1, 2 or 3 ⭐ )"),
                           CustomTextFormField(
                             controller: _detailController,
                             hintTex: "Ürün Detayı",

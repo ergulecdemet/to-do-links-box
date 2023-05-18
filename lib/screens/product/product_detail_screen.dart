@@ -1,14 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
-import 'package:my_links/constants/custom_drop_down.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import 'package:my_links/constants/button_bar.dart';
 import 'package:my_links/constants/colors.dart';
+import 'package:my_links/constants/custom_drop_down.dart';
 import 'package:my_links/constants/custom_text_formfield.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({
@@ -17,18 +18,20 @@ class ProductDetailScreen extends StatefulWidget {
     required this.import,
     required this.date,
     required this.link,
+    this.price,
   }) : super(key: key);
   final String name;
   final String import;
   final String date;
   final String link;
+  final int? price;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  var formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +87,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               height: MediaQuery.of(context).size.height * 0.8,
               child: SingleChildScrollView(
                 child: Form(
-                    key: formKey,
+                    key: _formKey,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.sp),
                       child: Column(
@@ -94,18 +97,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Kategori"),
+                              Text(
+                                "Oluşturulma tarihi: ${widget.date}",
+                                style: appTextStyles!
+                                    .sp8(context, appColors!.greyTextColor),
+                              ),
+                              const VerticalSpace(height: 20),
+                              const Text("Kategori gelmeliiiii"),
                               //DropdownMenuItem(child: Text("Kategori Seçiniz")),
-
                               TextAndCustomTextfield(
                                   title: "Ürün Adı",
                                   hintTex: "Ürün adını yazınız",
                                   initialValue: widget.name),
 
-                              const TextAndCustomTextfield(
+                              TextAndCustomTextfield(
                                   title: "Ürün Fiyatı",
                                   hintTex: "Ürün fiyat yazınız",
-                                  initialValue: "100"),
+                                  initialValue: widget.price.toString()),
 
                               const TextAndCustomTextfield(
                                 title: "Ürün Detayı",
@@ -123,13 +131,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               const VerticalSpace(height: 8),
 
                               CustomDropdownButton(
-                                  dropdownItems: const ["1", "2", "3"],
+                                  dropdownItems: const [
+                                    "1",
+                                    "2",
+                                    "3"
+                                  ], //bu da gelmeli listeden
                                   dropdownValue: "1",
                                   onChanged: (value) {},
-                                  hintText: "yıldız"),
+                                  hintText: widget.import.toString()),
+
+                              const VerticalSpace(height: 20),
+                              CutomButtonBar(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    //must add fonction
+                                    print("ürün güncelleniyor...");
+                                  }
+                                },
+                                text1: "GÜNCELLE",
+                              ),
                             ],
                           ),
-                          const Text("data"),
                         ],
                       ),
                     )),

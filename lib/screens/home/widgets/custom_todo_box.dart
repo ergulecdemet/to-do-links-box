@@ -17,12 +17,14 @@ class CustomToDoBox extends StatefulWidget {
     required this.date,
     required this.tick,
     required this.link,
+    this.price,
   }) : super(key: key);
   bool tick = false;
   final String name;
   final String import;
   final String date;
   final String link;
+  final int? price;
   @override
   State<CustomToDoBox> createState() => _CustomToDoBoxState();
 }
@@ -37,6 +39,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
             context,
             SlidePageRoute(
                 page: ProductDetailScreen(
+              price: widget.price,
               date: widget.date,
               import: widget.import,
               name: widget.name,
@@ -100,6 +103,14 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
                                   appColors!.blackColor, FontWeight.bold)
                               : appTextStyles!
                                   .sp12line(context, appColors!.greyTextColor)),
+                      Text(
+                        "Fiyat: ${widget.price.toString()} TL",
+                        style: (widget.tick == false)
+                            ? appTextStyles!
+                                .sp10(context, appColors!.greyTextColor)
+                            : appTextStyles!
+                                .sp10line(context, appColors!.greyTextColor),
+                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -112,7 +123,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
                                     context, appColors!.greyTextColor),
                           ),
                           Text(
-                            widget.import,
+                            widget.import.toString(),
                             maxLines: 1,
                             style: appTextStyles!.sp10(context,
                                 appColors!.yellowColor, FontWeight.w100),

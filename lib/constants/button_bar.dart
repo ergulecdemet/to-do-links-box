@@ -8,12 +8,12 @@ class CutomButtonBar extends StatefulWidget {
   const CutomButtonBar({
     Key? key,
     this.onPressed,
-    required this.text0,
+    this.text0,
     required this.text1,
   }) : super(key: key);
 
   final void Function()? onPressed;
-  final String text0;
+  final String? text0;
   final String text1;
 
   @override
@@ -25,18 +25,20 @@ class _CutomButtonBarState extends State<CutomButtonBar> {
   Widget build(BuildContext context) {
     return ButtonBar(
       children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: appColors!.orangeAccentColor),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            widget.text0,
-            style: appTextStyles!
-                .sp12(context, appColors!.whiteColor, FontWeight.bold),
-          ),
-        ),
+        (widget.text0 != null)
+            ? ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: appColors!.orangeAccentColor),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  widget.text0!,
+                  style: appTextStyles!
+                      .sp12(context, appColors!.whiteColor, FontWeight.bold),
+                ),
+              )
+            : Container(),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               backgroundColor: appColors!.primaryColor),
