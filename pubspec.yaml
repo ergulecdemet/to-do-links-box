@@ -67,6 +67,7 @@ flutter:
     - assets/fonts/
     - assets/flare/
     - assets/rive/
+    - assets/db/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
