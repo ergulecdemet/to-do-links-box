@@ -5,14 +5,16 @@ class Product {
   String? categoryName; //db de yok
   String? productName;
   int? productPrice;
+  String? productLink;
   String? productExplane; //?
   String? productImport; //?
-  int? productPlanDate; //?
-  int? productCreateDate;
+  String? productPlanDate; //?
+  String? productCreateDate;
   Product({
     this.categoryId,
     this.productName,
     this.productPrice,
+    this.productLink,
     this.productExplane,
     this.productImport,
     this.productPlanDate,
@@ -23,6 +25,7 @@ class Product {
     this.categoryId,
     this.productName,
     this.productPrice,
+    this.productLink,
     this.productExplane,
     this.productImport,
     this.productPlanDate,
@@ -34,6 +37,7 @@ class Product {
     map['categoryId'] = categoryId;
     map['productName'] = productName;
     map['productPrice'] = productPrice;
+    map['productLink'] = productLink;
     map['productExplane'] = productExplane;
     map['productImport'] = productImport;
     map['productPlanDate'] = productPlanDate;
@@ -47,6 +51,7 @@ class Product {
     categoryName = map['categoryName']; //db de yok
     productName = map['productName'];
     productPrice = map['productPrice'];
+    productLink = map['productLink'];
     productExplane = map['productExplane'];
     productImport = map['productImport'];
     productPlanDate = map['productPlanDate'];
@@ -55,6 +60,6 @@ class Product {
 
   @override
   String toString() {
-    return 'Product(productId: $productId, categoryId: $categoryId, categoryName: $categoryName, productName: $productName, productPrice: $productPrice, productExplane: $productExplane, productImport: $productImport, productPlanDate: $productPlanDate, productCreateDate: $productCreateDate)';
+    return 'Product(productId: $productId, categoryId: $categoryId, categoryName: $categoryName, productName: $productName, productPrice: $productPrice, productLink: $productLink, productExplane: $productExplane, productImport: $productImport, productPlanDate: $productPlanDate, productCreateDate: $productCreateDate)';
   }
 }

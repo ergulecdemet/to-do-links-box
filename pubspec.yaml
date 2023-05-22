@@ -39,6 +39,7 @@ dependencies:
   sizer: ^2.0.15
   rive: ^0.10.4
   url_launcher: ^6.1.11
+  sqflite: ^2.2.8+4
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +68,7 @@ flutter:
     - assets/fonts/
     - assets/flare/
     - assets/rive/
-    - assets/db/
+    - assets/links.db
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

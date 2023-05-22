@@ -136,12 +136,12 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
                           Text(
                             "Oluşturulma Tarihi: ",
                             style: (widget.tick == false)
-                                ? appTextStyles!.sp8(
+                                ? appTextStyles!.sp6(
                                     context,
                                     appColors!.greyTextColor,
                                   )
                                 : appTextStyles!
-                                    .sp8line(context, appColors!.greyTextColor),
+                                    .sp6line(context, appColors!.greyTextColor),
                           ),
                           Text(
                             widget.date,

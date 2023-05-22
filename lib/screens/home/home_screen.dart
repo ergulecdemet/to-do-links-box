@@ -1,9 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:my_links/constants/button_bar.dart';
 import 'package:my_links/constants/colors.dart';
+import 'package:my_links/constants/custom_text_formfield.dart';
+import 'package:my_links/constants/space/horizontal_space.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
+import 'package:my_links/model/category.dart';
+import 'package:my_links/model/product.dart';
+import 'package:my_links/screens/category/category.dart';
 import 'package:my_links/screens/home/widgets/custom_todo_box.dart';
 import 'package:my_links/screens/home/widgets/link_add_floating.dart';
+import 'package:my_links/utils/database_helper.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,9 +40,20 @@ List<String> productImportList = ["⭐", "⭐", "⭐", "⭐"];
 List<String> productCategory = ["Mont", "Ayakkabı ", " Takı"];
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<bool> tick = List.generate(productNameList.length, (index) => false);
+  List<Product> allProduct = [];
+  DatabaseHelper? databaseHelper;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    List allProduct = <Product>[];
+    databaseHelper = DatabaseHelper();
+  }
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var categoryFormKey = GlobalKey<FormState>();
+  List<bool> tick = List.generate(productNameList.length, (index) => false);
+  String? newCategoryName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +99,99 @@ class _HomeScreenState extends State<HomeScreen> {
                     "${totalPrice()} TL",
                     style: appTextStyles!
                         .sp12(context, appColors!.tickColor, FontWeight.w600),
-                  )
+                  ),
+                  const HorizontalSpace(width: 20),
+                  Column(
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CategoryScreen()));
+                          },
+                          child: const Text("Kategorileri Listele")),
+                      ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return SimpleDialog(
+                                  backgroundColor: appColors!.todoColor,
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.sp)),
+                                  title: Text("Yeni Kategori Ekle",
+                                      style: appTextStyles!.sp14(
+                                          context,
+                                          appColors!.primaryColor,
+                                          FontWeight.bold)),
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0.sp),
+                                      child: Form(
+                                          key: categoryFormKey,
+                                          child: Wrap(
+                                            runSpacing: 2.h,
+                                            children: [
+                                              CustomTextFormField(
+                                                onSaved: (newValue) {
+                                                  newCategoryName = newValue;
+                                                },
+                                                hintTex: "Kategori Adı",
+                                                validator: (p0) {
+                                                  if (p0!.isEmpty) {
+                                                    return "Bir Kategori yazınız";
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ],
+                                          )),
+                                    ),
+                                    CutomButtonBar(
+                                      onPressed: () {
+                                        if (categoryFormKey.currentState!
+                                            .validate()) {
+                                          categoryFormKey.currentState!.save();
+                                          databaseHelper!
+                                              .addCategory(MyCategory(
+                                                  categoryName:
+                                                      newCategoryName))
+                                              .then((value) =>
+                                                  Navigator.pop(context))
+                                              .then((value) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10
+                                                          .sp), // Köşelerin yuvarlaklığını belirler
+                                                ),
+                                                backgroundColor:
+                                                    appColors!.primaryColor,
+                                                content: const Text(
+                                                    "Başarılı eklendi.."),
+                                              ),
+                                            );
+                                          });
+                                          print("kategori ekleniyor...");
+                                        }
+                                      },
+                                      text0: "Vazgeç",
+                                      text1: "EKLE",
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text("Kategorileri Ekle"))
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -91,122 +203,51 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const VerticalSpace(height: 20),
-            SizedBox(
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: productNameList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: CustomToDoBox(
-                              price: productPriceList[index],
-                              link: productLinks[index],
-                              tick: tick[index],
-                              name: productNameList[index],
-                              date: productDateList[index],
-                              import: productImportList[index].toString(),
-                            )),
-                        const VerticalSpace(height: 10),
-                      ],
-                    );
+            (databaseHelper == null)
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : FutureBuilder(
+                    future: databaseHelper!.getProductList(),
+                    builder: (context, AsyncSnapshot<List<Product>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        allProduct = snapshot.data!;
+                        sleep(const Duration(milliseconds: 500));
 
-                    // return ExpansionTile(
-                    //   leading: _oncelikIconuAta(
-                    //       tumNotlar![index].notOncelik!.toInt()),
-                    //   title: Text(tumNotlar![index].notBaslik.toString()),
-                    //   children: <Widget>[
-                    //     Container(
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Row(
-                    //             children: [
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   "Kategori",
-                    //                   style: TextStyle(color: Colors.redAccent),
-                    //                 ),
-                    //               ),
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   tumNotlar![index]
-                    //                       .kategoriBaslik
-                    //                       .toString(),
-                    //                   style: TextStyle(color: Colors.black),
-                    //                 ),
-                    //               )
-                    //             ],
-                    //           ),
-                    //           Row(
-                    //             children: [
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   "Oluşturulma Tarihi",
-                    //                   style: TextStyle(color: Colors.redAccent),
-                    //                 ),
-                    //               ),
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   databaseHelper!.dateFormat(DateTime.parse(
-                    //                       //! parse işlemi yaparak sen bana string bir tarşh ver ben seni tarihe dönüştürürüm diyor
-                    //                       tumNotlar![index]
-                    //                           .notTarih
-                    //                           .toString())),
-                    //                   style: TextStyle(color: Colors.black),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           Row(
-                    //             children: [
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   tumNotlar![index].notIcerik.toString(),
-                    //                   style: TextStyle(fontSize: 18),
-                    //                 ),
-                    //               ),
-                    //               ButtonBar(
-                    //                 alignment: MainAxisAlignment.center,
-                    //                 mainAxisSize: MainAxisSize.min,
-                    //                 children: <Widget>[
-                    //                   TextButton(
-                    //                       onPressed: () =>
-                    //                           _notSil(tumNotlar![index].notID),
-                    //                       child: Text(
-                    //                         "SİL",
-                    //                         style: TextStyle(
-                    //                             color: Colors.redAccent),
-                    //                       )),
-                    //                   TextButton(
-                    //                       onPressed: () {
-                    //                         _detaySayfasinaGit(
-                    //                             context, tumNotlar![index]);
-                    //                       },
-                    //                       child: Text(
-                    //                         "GÜNCELLE",
-                    //                         style:
-                    //                             TextStyle(color: Colors.green),
-                    //                       ))
-                    //                 ],
-                    //               )
-                    //             ],
-                    //           )
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // );
-                  }),
-            ),
+                        return ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: allProduct.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.w),
+                                      child: CustomToDoBox(
+                                        price: 100,
+                                        link: "jfjfjjfjf",
+                                        tick: false,
+                                        name: allProduct[index]
+                                            .productName
+                                            .toString(),
+                                        date: allProduct[index]
+                                            .productCreateDate
+                                            .toString(),
+                                        import: allProduct[index]
+                                            .productImport
+                                            .toString(),
+                                      )),
+                                  const VerticalSpace(height: 10),
+                                ],
+                              );
+                            });
+                      } else {
+                        return const Text("Yükleniyor");
+                      }
+                    },
+                  ),
           ],
         ),
       ),

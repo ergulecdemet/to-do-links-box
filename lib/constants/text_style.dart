@@ -74,7 +74,18 @@ class AppTextStyles {
       fontFamily: 'Montserrat',
     );
   }
+
   //------------LİNESTYLE-------------
+  TextStyle sp6line(BuildContext context, Color? color,
+      [FontWeight? fontWeight]) {
+    return TextStyle(
+      decoration: TextDecoration.lineThrough,
+      fontSize: 6.sp,
+      color: color,
+      fontWeight: fontWeight,
+      fontFamily: 'Montserrat',
+    );
+  }
 
   TextStyle sp8line(BuildContext context, Color? color,
       [FontWeight? fontWeight]) {
