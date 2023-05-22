@@ -8,8 +8,8 @@ import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:sizer/sizer.dart';
 
-class LinkAddFloating extends StatelessWidget {
-  LinkAddFloating({
+class LinkAddFloating extends StatefulWidget {
+  const LinkAddFloating({
     Key? key,
     required this.dropdownItems,
     required GlobalKey<FormState> formKey,
@@ -17,11 +17,18 @@ class LinkAddFloating extends StatelessWidget {
         super(key: key);
 
   final GlobalKey<FormState> _formKey;
+  final List<String> dropdownItems;
+
+  @override
+  State<LinkAddFloating> createState() => _LinkAddFloatingState();
+}
+
+class _LinkAddFloatingState extends State<LinkAddFloating> {
   final TextEditingController _linkController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _detailController = TextEditingController();
-  final List<String> dropdownItems;
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -42,12 +49,12 @@ class LinkAddFloating extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0.sp),
                   child: Form(
-                      key: _formKey,
+                      key: widget._formKey,
                       child: Wrap(
                         runSpacing: 2.h,
                         children: [
                           CustomDropdownButton(
-                              dropdownItems: dropdownItems,
+                              dropdownItems: widget.dropdownItems,
                               dropdownValue: "1",
                               onChanged: (value) {},
                               hintText: "Bir kategori seçiniz"),
@@ -106,7 +113,7 @@ class LinkAddFloating extends StatelessWidget {
                 ),
                 CutomButtonBar(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    if (widget._formKey.currentState!.validate()) {
                       //must add fonction
                       print("ürün ekleniyor...");
                     }
