@@ -70,30 +70,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       appBar: AppBar(
         backgroundColor: appColors!.primaryColor.withOpacity(0.4),
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Container(
-            height: 30.sp,
-            width: 30.sp,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: appColors!.blackColor,
-                    blurRadius: 2.sp,
-                    offset: Offset(0, 1.sp))
-              ],
-              shape: BoxShape.circle,
-              color: appColors!.primaryColor,
-            ),
-            child: Center(
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 15.sp,
-                color: appColors!.whiteColor,
-              ),
-            ),
-          ),
-        ),
+        leading: const CustomBackButton(),
       ),
       backgroundColor: appColors!.whiteColor,
       body: GestureDetector(
@@ -259,6 +236,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
+  }
+}
+
+class CustomBackButton extends StatelessWidget {
+  const CustomBackButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => Navigator.pop(context),
+      icon: Container(
+        height: 30.sp,
+        width: 30.sp,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: appColors!.blackColor,
+                blurRadius: 2.sp,
+                offset: Offset(0, 1.sp))
+          ],
+          shape: BoxShape.circle,
+          color: appColors!.primaryColor,
+        ),
+        child: Center(
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 15.sp,
+            color: appColors!.whiteColor,
+          ),
+        ),
+      ),
+    );
   }
 }
 

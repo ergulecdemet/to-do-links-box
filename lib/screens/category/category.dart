@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
+import 'package:my_links/screens/product/product_detail_screen.dart';
 import 'package:my_links/utils/database_helper.dart';
 import 'package:sizer/sizer.dart';
 
@@ -35,12 +36,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           elevation: 0,
           centerTitle: true,
           backgroundColor: appColors!.transparentColor,
-          leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: appColors!.blackColor,
-              )),
+          leading: const CustomBackButton(),
           title: Text(
             "Category List",
             style: appTextStyles!.sp18(

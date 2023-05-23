@@ -38,12 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> refreshPage() async {
-    // Yenileme işlemini burada gerçekleştirin
-    // Örneğin, veri kaynağından güncel verileri almak veya işlem yapmak
-    await Future.delayed(
-        const Duration(seconds: 1)); // Örnek olarak 2 saniye bekletiyoruz
-
-    // Yenileme işlemi tamamlandıktan sonra setState kullanarak sayfayı yeniden oluşturun
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {});
   }
 

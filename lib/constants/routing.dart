@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:my_links/screens/product/product_detail_screen.dart';
 
 import '../screens/home/home_screen.dart';
 
