@@ -17,6 +17,7 @@ class CustomToDoBox extends StatefulWidget {
     required this.date,
     required this.tick,
     required this.link,
+    required this.detail,
     this.price,
   }) : super(key: key);
   bool tick = false;
@@ -25,6 +26,8 @@ class CustomToDoBox extends StatefulWidget {
   final String date;
   final String link;
   final int? price;
+  final String detail;
+
   @override
   State<CustomToDoBox> createState() => _CustomToDoBoxState();
 }
@@ -44,6 +47,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
               import: widget.import,
               name: widget.name,
               link: widget.link,
+              detail: widget.detail,
             )));
       },
       child: Container(
@@ -126,7 +130,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
                             widget.import.toString(),
                             maxLines: 1,
                             style: appTextStyles!.sp10(context,
-                                appColors!.yellowColor, FontWeight.w100),
+                                appColors!.primaryColor, FontWeight.w100),
                           ),
                         ],
                       ),
@@ -147,12 +151,12 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
                             widget.date,
                             maxLines: 1,
                             style: (widget.tick == false)
-                                ? appTextStyles!.sp8(
+                                ? appTextStyles!.sp6(
                                     context,
                                     appColors!.greyTextColor,
                                   )
                                 : appTextStyles!
-                                    .sp8line(context, appColors!.greyTextColor),
+                                    .sp6line(context, appColors!.greyTextColor),
                           ),
                         ],
                       ),

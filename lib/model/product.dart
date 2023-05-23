@@ -7,7 +7,7 @@ class Product {
   int? productPrice;
   String? productLink;
   String? productExplane; //?
-  String? productImport; //?
+  int? productImport; //?
   String? productPlanDate; //?
   String? productCreateDate;
   Product({

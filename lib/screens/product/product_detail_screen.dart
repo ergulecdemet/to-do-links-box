@@ -11,6 +11,9 @@ import 'package:my_links/constants/custom_text_formfield.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
 
+import '../../model/category.dart';
+import '../../utils/database_helper.dart';
+
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({
     Key? key,
@@ -18,6 +21,7 @@ class ProductDetailScreen extends StatefulWidget {
     required this.import,
     required this.date,
     required this.link,
+    required this.detail,
     this.price,
   }) : super(key: key);
   final String name;
@@ -25,12 +29,29 @@ class ProductDetailScreen extends StatefulWidget {
   final String date;
   final String link;
   final int? price;
+  final String detail;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  List<MyCategory> allCategory = [];
+  DatabaseHelper? databaseHelper;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    allCategory = <MyCategory>[];
+    databaseHelper = DatabaseHelper();
+    databaseHelper!.getCategory().then((value) {
+      for (Map readMap in value) {
+        allCategory.add(MyCategory.fromMap(readMap as Map<String, dynamic>));
+      }
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -105,6 +126,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               const VerticalSpace(height: 20),
                               const Text("Kategori gelmeliiiii"),
                               //DropdownMenuItem(child: Text("Kategori Seçiniz")),
+
                               TextAndCustomTextfield(
                                   title: "Ürün Adı",
                                   hintTex: "Ürün adını yazınız",
@@ -115,10 +137,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   hintTex: "Ürün fiyat yazınız",
                                   initialValue: widget.price.toString()),
 
-                              const TextAndCustomTextfield(
+                              TextAndCustomTextfield(
                                 title: "Ürün Detayı",
                                 hintTex: "Ürün detayını yazınız",
-                                initialValue: "Çok güzel bir şey ya",
+                                initialValue: widget.detail,
                                 maxLines: 3,
                               ),
                               const VerticalSpace(height: 8),
