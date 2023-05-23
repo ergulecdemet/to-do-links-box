@@ -79,6 +79,14 @@ class DatabaseHelper {
     var result = await db.insert("category", category.toMap());
     return result;
   }
+
+  Future<int> deleteCategory(int categoryId) async {
+    var db = await _getDatabase();
+    var result = await db.delete("category",
+        where: 'categoryId = ?',
+        whereArgs: [categoryId]); //kategoriId ye göre güncelleme olacak
+    return result;
+  }
 //---products table functions
 
   Future<List<Map<String, dynamic>>> getProducts() async {
@@ -110,19 +118,19 @@ class DatabaseHelper {
     return sonuc;
   }
 
-  // Future productUpdate(Product product) async {
-  //   var db = await _getDatabase();
-  //   var sonuc = await db.update("product", product.toMap(),
-  //       where: 'productId=?', whereArgs: [product.productId]);
-  //   return sonuc;
-  // }
+  Future productUpdate(Product product) async {
+    var db = await _getDatabase();
+    var sonuc = await db.update("product", product.toMap(),
+        where: 'productId=?', whereArgs: [product.productId]);
+    return sonuc;
+  }
 
-  // Future<int> productDelete(int productId) async {
-  //   var db = await _getDatabase();
-  //   var sonuc = await db
-  //       .delete("product", where: 'productId=?', whereArgs: [productId]);
-  //   return sonuc;
-  // }
+  Future<int> productDelete(int productId) async {
+    var db = await _getDatabase();
+    var sonuc = await db
+        .delete("product", where: 'productId=?', whereArgs: [productId]);
+    return sonuc;
+  }
 
   //---date etc.
 

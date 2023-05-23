@@ -41,6 +41,7 @@ class _FloatingSimpleDialogState extends State<FloatingSimpleDialog> {
         allCategory.add(MyCategory.fromMap(readMap as Map<String, dynamic>));
       }
     });
+    setState(() {});
   }
 
   @override
@@ -154,11 +155,19 @@ class _FloatingSimpleDialogState extends State<FloatingSimpleDialog> {
                       productCreateDate: productDate.toString()))
                   .then((value) {
                 Navigator.pop(context);
-                setState(() {});
+              }).then((value) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: appColors!.primaryColor,
+                    content:
+                        const Text("Başarılı eklendi.. sayfayı yenileyiniz"),
+                  ),
+                );
               });
               //must add fonction
               print("ürün ekleniyor...");
             }
+            setState(() {});
           },
           text0: "Vazgeç",
           text1: "EKLE",

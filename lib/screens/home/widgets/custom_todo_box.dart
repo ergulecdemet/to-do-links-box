@@ -1,13 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
-import 'package:my_links/screens/home/widgets/delete_icon.dart';
+import 'package:my_links/model/product.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/slide_page_route.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:my_links/screens/product/product_detail_screen.dart';
+
+import '../../../constants/packg/awesome_dialog/awesome_dialog.dart';
 
 class CustomToDoBox extends StatefulWidget {
   CustomToDoBox({
@@ -18,6 +20,8 @@ class CustomToDoBox extends StatefulWidget {
     required this.tick,
     required this.link,
     required this.detail,
+    required this.btnOkOnPress,
+    this.product,
     this.price,
   }) : super(key: key);
   bool tick = false;
@@ -27,7 +31,8 @@ class CustomToDoBox extends StatefulWidget {
   final String link;
   final int? price;
   final String detail;
-
+  Product? product;
+  void Function()? btnOkOnPress;
   @override
   State<CustomToDoBox> createState() => _CustomToDoBoxState();
 }
@@ -42,6 +47,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
             context,
             SlidePageRoute(
                 page: ProductDetailScreen(
+              product: widget.product,
               price: widget.price,
               date: widget.date,
               import: widget.import,
@@ -167,7 +173,25 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
             ),
             Padding(
               padding: EdgeInsets.all(10.0.sp),
-              child: const DeleteIcon(),
+              child: GestureDetector(
+                onTap: () {
+                  print("keekk");
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.warning,
+                    animType: AnimType.rightSlide,
+                    title: 'Çöp Kutusu',
+                    desc: 'Silmek istediğinize emin misiniz?',
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: widget.btnOkOnPress,
+                  ).show();
+                },
+                child: Icon(
+                  Icons.delete,
+                  size: 25.sp,
+                  color: appColors!.redColor,
+                ),
+              ),
             )
           ],
         ),

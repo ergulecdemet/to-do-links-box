@@ -22,6 +22,8 @@ class _CatgeoryCreateButtonState extends State<CatgeoryCreateButton> {
   Widget build(BuildContext context) {
     String? newCategoryName;
     return ElevatedButton(
+        style:
+            ElevatedButton.styleFrom(backgroundColor: appColors!.primaryColor),
         onPressed: () {
           showDialog(
             context: context,
