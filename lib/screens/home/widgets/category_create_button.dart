@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_links/constants/button_bar.dart';
+import 'package:my_links/constants/general_widgets/button_bar.dart';
 import 'package:my_links/constants/colors.dart';
-import 'package:my_links/constants/custom_text_formfield.dart';
+import 'package:my_links/constants/general_widgets/custom_text_formfield.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:sizer/sizer.dart';
 
@@ -57,7 +57,7 @@ class _CatgeoryCreateButtonState extends State<CatgeoryCreateButton> {
                           ],
                         )),
                   ),
-                  CutomButtonBar(
+                  CustomButtonBar(
                     onPressed: widget.onPressed,
                     text0: "Vazgeç",
                     text1: "EKLE",

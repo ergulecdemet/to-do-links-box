@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/text_style.dart';
 
-class CutomButtonBar extends StatefulWidget {
-  const CutomButtonBar({
+class CustomButtonBar extends StatefulWidget {
+  const CustomButtonBar({
     Key? key,
     this.onPressed,
     this.text0,
@@ -17,10 +17,10 @@ class CutomButtonBar extends StatefulWidget {
   final String text1;
 
   @override
-  State<CutomButtonBar> createState() => _CutomButtonBarState();
+  State<CustomButtonBar> createState() => _CustomButtonBarState();
 }
 
-class _CutomButtonBarState extends State<CutomButtonBar> {
+class _CustomButtonBarState extends State<CustomButtonBar> {
   @override
   Widget build(BuildContext context) {
     return ButtonBar(

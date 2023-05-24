@@ -1,11 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
-import 'package:my_links/model/product.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:my_links/constants/colors.dart';
-import 'package:my_links/constants/slide_page_route.dart';
+import 'package:my_links/constants/general_widgets/slide_page_route.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:my_links/screens/product/product_detail_screen.dart';
 
@@ -21,7 +20,7 @@ class CustomToDoBox extends StatefulWidget {
     required this.link,
     required this.detail,
     required this.btnOkOnPress,
-    this.product,
+    required this.productId,
     this.price,
   }) : super(key: key);
   bool tick = false;
@@ -31,7 +30,7 @@ class CustomToDoBox extends StatefulWidget {
   final String link;
   final int? price;
   final String detail;
-  Product? product;
+  final int? productId;
   void Function()? btnOkOnPress;
   @override
   State<CustomToDoBox> createState() => _CustomToDoBoxState();
@@ -44,17 +43,19 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
       onTap: () {
         print("tıklandı");
         Navigator.push(
-            context,
-            SlidePageRoute(
-                page: ProductDetailScreen(
-              product: widget.product,
+          context,
+          SlidePageRoute(
+            page: ProductDetailScreen(
+              productId: widget.productId,
               price: widget.price,
               date: widget.date,
               import: widget.import,
               name: widget.name,
               link: widget.link,
               detail: widget.detail,
-            )));
+            ),
+          ),
+        );
       },
       child: Container(
         height: 10.h,
@@ -172,7 +173,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0.sp),
+              padding: EdgeInsets.all(5.0.sp),
               child: GestureDetector(
                 onTap: () {
                   print("keekk");

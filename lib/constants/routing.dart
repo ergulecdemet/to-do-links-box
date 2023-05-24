@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:my_links/screens/onboarding/onboarding_screen.dart';
 
 import '../screens/home/home_screen.dart';
 
@@ -19,6 +20,10 @@ class RouteGenerator {
     switch (settings.name) {
       //must be splash screen
       case "/":
+        return createRoute(const OnboardingScreen(), settings);
+      case "/onboarding":
+        return createRoute(const OnboardingScreen(), settings);
+      case "/home":
         return createRoute(const HomeScreen(), settings);
 
       default:
@@ -34,10 +39,7 @@ class RouteGenerator {
   }
 }
 
-enum AppRoutes {
-  home,
-  productDetail,
-}
+enum AppRoutes { home, productDetail, onboarding }
 
 extension MyAppRoutes on AppRoutes {
   String get path {
@@ -46,6 +48,8 @@ extension MyAppRoutes on AppRoutes {
         return "/";
       case AppRoutes.productDetail:
         return "/productDetail";
+      case AppRoutes.onboarding:
+        return "/onboarding";
     }
   }
 }

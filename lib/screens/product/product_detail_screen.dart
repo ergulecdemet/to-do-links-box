@@ -1,29 +1,28 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:my_links/constants/general_widgets/custom_back_button.dart';
+import 'package:my_links/constants/general_widgets/text_and_custom_textfield.dart';
 import 'package:my_links/model/product.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:my_links/constants/button_bar.dart';
+import 'package:my_links/constants/general_widgets/button_bar.dart';
 import 'package:my_links/constants/colors.dart';
-import 'package:my_links/constants/custom_drop_down.dart';
-import 'package:my_links/constants/custom_text_formfield.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
 
-import '../../model/category.dart';
 import '../../utils/database_helper.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  ProductDetailScreen({
+  const ProductDetailScreen({
     Key? key,
     required this.name,
     required this.import,
     required this.date,
     required this.link,
     required this.detail,
-    required this.product,
+    required this.productId,
     this.price,
   }) : super(key: key);
   final String name;
@@ -32,37 +31,29 @@ class ProductDetailScreen extends StatefulWidget {
   final String link;
   final int? price;
   final String detail;
-  Product? product;
+  final int? productId;
+
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  int? categoryId = 1;
+  int categoryId = 0;
   String? productName;
-  String? productLink;
-  String? productDetail;
-  int? productPrice = 0;
-  int? productImport = 0;
-  String productDate = DateTime.now().toString();
-
-  List<MyCategory> allCategory = [];
+  String? link;
+  int productImport = 0;
+  String? productExplane;
+  String? productCreateDate;
+  int? productPrice;
   DatabaseHelper? databaseHelper;
+  final updateFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    allCategory = <MyCategory>[];
     databaseHelper = DatabaseHelper();
-    databaseHelper!.getCategory().then((value) {
-      for (Map readMap in value) {
-        allCategory.add(MyCategory.fromMap(readMap as Map<String, dynamic>));
-      }
-    });
   }
-
-  final updateFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +102,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   .sp8(context, appColors!.greyTextColor),
                             ),
                             const VerticalSpace(height: 20),
-                            const Text("Kategori gelmeliiiii"),
+                            // const Text("Kategori gelmeliiiii"),
                             //DropdownMenuItem(child: Text("Kategori Seçiniz")),
 
                             TextAndCustomTextfield(
@@ -132,48 +123,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             const VerticalSpace(height: 8),
 
-                            Text(
-                              "Öncelik Sırası",
-                              style: appTextStyles!.sp14(context,
-                                  appColors!.blackColor, FontWeight.bold),
-                            ),
-                            const VerticalSpace(height: 8),
+                            // Text(
+                            //   "Öncelik Sırası",
+                            //   style: appTextStyles!.sp14(context,
+                            //       appColors!.blackColor, FontWeight.bold),
+                            // ),
+                            // const VerticalSpace(height: 8),
 
-                            CustomDropdownButton(
-                                dropdownItems: const [
-                                  "1",
-                                  "2",
-                                  "3"
-                                ], //bu da gelmeli listeden
-                                dropdownValue: "1",
-                                onChanged: (value) {},
-                                hintText: widget.import.toString()),
+                            // CustomDropdownButton(
+                            //     dropdownItems: const [
+                            //       "1",
+                            //       "2",
+                            //       "3"
+                            //     ], //bu da gelmeli listeden
+                            //     dropdownValue: "1",
+                            //     onChanged: (value) {},
+                            //     hintText: widget.import.toString()),
 
                             const VerticalSpace(height: 20),
-                            CutomButtonBar(
+                            CustomButtonBar(
                               onPressed: () {
-                                if (updateFormKey.currentState!.validate()) {
-                                  updateFormKey.currentState!.save();
-                                  databaseHelper!
-                                      .productUpdate(
-                                    Product.withID(
-                                        categoryId: widget.product?.categoryId,
-                                        productName: productName,
-                                        productLink: productLink,
-                                        productPrice: productPrice,
-                                        productImport: productImport,
-                                        productExplane: productDetail,
-                                        productCreateDate:
-                                            productDate.toString()),
-                                  )
-                                      .then((updateId) {
-                                    if (updateId != 0) {
-                                      Navigator.pop(context);
-
-                                      //must add fonction
-                                      print("ürün güncelleniyor...");
-                                    }
-                                  });
+                                if (databaseHelper != null) {
+                                  if (updateFormKey.currentState!.validate()) {
+                                    updateFormKey.currentState!.save();
+                                    databaseHelper
+                                        ?.productUpdate(Product.withID(
+                                          productId: widget.productId,
+                                          categoryId: categoryId,
+                                          productName: widget.name,
+                                          productLink: widget.link,
+                                          productImport: widget.price,
+                                          productExplane: widget.detail,
+                                          productPlanDate: widget.date,
+                                          productCreateDate: widget.date,
+                                          productPrice: widget.price,
+                                        ))
+                                        .then(
+                                            (value) => Navigator.pop(context));
+                                  }
+                                } else {
+                                  print("sorunluuuu");
                                 }
                               },
                               text1: "GÜNCELLE",
@@ -236,73 +225,5 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
-  }
-}
-
-class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => Navigator.pop(context),
-      icon: Container(
-        height: 30.sp,
-        width: 30.sp,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: appColors!.blackColor,
-                blurRadius: 2.sp,
-                offset: Offset(0, 1.sp))
-          ],
-          shape: BoxShape.circle,
-          color: appColors!.primaryColor,
-        ),
-        child: Center(
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 15.sp,
-            color: appColors!.whiteColor,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TextAndCustomTextfield extends StatelessWidget {
-  const TextAndCustomTextfield({
-    Key? key,
-    required this.title,
-    required this.hintTex,
-    required this.initialValue,
-    this.maxLines,
-  }) : super(key: key);
-  final String title;
-  final String hintTex;
-  final String initialValue;
-  final int? maxLines;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const VerticalSpace(height: 8),
-        Text(
-          title,
-          style: appTextStyles!
-              .sp14(context, appColors!.blackColor, FontWeight.bold),
-        ),
-        const VerticalSpace(height: 8),
-        CustomTextFormField(
-          hintTex: hintTex,
-          initialValue: initialValue,
-        ),
-      ],
-    );
   }
 }

@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:my_links/constants/my_divider.dart';
-import 'package:my_links/model/category.dart';
+import 'package:my_links/constants/general_widgets/button_bar.dart';
+import 'package:my_links/constants/general_widgets/custom_text_formfield.dart';
+import 'package:my_links/constants/general_widgets/my_divider.dart';
 import 'package:my_links/screens/home/widgets/category_add.dart';
-import 'package:my_links/screens/home/widgets/link_add_floating.dart';
 import 'package:sizer/sizer.dart';
-
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/space/horizontal_space.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
@@ -16,6 +14,9 @@ import 'package:my_links/model/product.dart';
 import 'package:my_links/screens/category/category.dart';
 import 'package:my_links/screens/home/widgets/custom_todo_box.dart';
 import 'package:my_links/utils/database_helper.dart';
+
+import '../../constants/is_link.dart';
+import '../../model/category.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,41 +27,50 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Product> allProduct = [];
-  DatabaseHelper? databaseHelper;
+  List<MyCategory> allCategory = [];
+  int? categoryId = 1;
+  late String productName;
+  String? productLink;
+  String? productDetail;
+  int? productPrice = 0;
+  int? productImport = 0;
+  String productDate = DateTime.now().toString();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    databaseHelper = DatabaseHelper();
-    List allProduct = <MyCategory>[];
-    setState(() {});
-  }
+  DatabaseHelper? databaseHelper;
 
   Future<void> refreshPage() async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {});
   }
 
-  Product? product;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    databaseHelper = DatabaseHelper();
+    List allProduct = <Product>[];
+    List allCategory = <MyCategory>[];
+    totalPrice();
+    refreshPage();
+    setState(() {});
+  }
+
+  var productFormKey = GlobalKey<FormState>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // List<bool> tick = List.generate(productNameList.length, (index) => false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appColors!.whiteColor,
       appBar: AppBar(
         backgroundColor: appColors!.transparentColor,
-        elevation: 0,
-        title: Center(
-          child: Text(
-            "TO-DO LİNKS",
-            style: appTextStyles!.sp18(
-              context,
-              appColors!.blackColor,
-              FontWeight.w700,
-            ),
+        title: Text(
+          "TO-DO LİNKS",
+          style: appTextStyles!.sp18(
+            context,
+            appColors!.blackColor,
+            FontWeight.w700,
           ),
         ),
       ),
@@ -72,7 +82,136 @@ class _HomeScreenState extends State<HomeScreen> {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return const FloatingSimpleDialog();
+                  return SimpleDialog(
+                    backgroundColor: appColors!.todoColor,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.sp)),
+                    title: Text("Yeni Ürün Ekle",
+                        style: appTextStyles!.sp14(
+                            context, appColors!.primaryColor, FontWeight.bold)),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0.sp),
+                        child: Form(
+                            key: productFormKey,
+                            child: Wrap(
+                              runSpacing: 2.h,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 24,
+                                  ),
+                                  margin: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 27, 23, 23),
+                                          width: 1),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                    items: categoryItems(),
+                                    value: categoryId,
+                                    onChanged: (selectCategoryID) {
+                                      setState(() {
+                                        categoryId = selectCategoryID!;
+                                      });
+                                    },
+                                  )),
+                                ),
+                                CustomTextFormField(
+                                  hintTex: "Ürün Linki ( https:// )",
+                                  onSaved: (p0) {
+                                    productLink = p0;
+                                  },
+                                  validator: (p0) {
+                                    if (p0!.isEmpty) {
+                                      return "Lütfen link giriniz";
+                                    } else if (!isLink(p0)) {
+                                      // could be !p0.contains("https://")
+                                      return "Lütfen geçerli bir link giriniz";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                CustomTextFormField(
+                                  hintTex: "Ürün Adı",
+                                  onSaved: (p0) {
+                                    productName = p0!;
+                                  },
+                                  validator: (p0) {
+                                    if (p0!.isEmpty) {
+                                      return "Lütfen ürün adı giriniz";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                CustomTextFormField(
+                                  hintTex: "Ürün Fiyatı",
+                                  onSaved: (p0) {
+                                    productPrice = int.parse(p0!);
+                                  },
+                                  validator: (p0) {
+                                    if (p0!.isEmpty) {
+                                      return "Lütfen ürün fiyatı giriniz";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const VerticalSpace(height: 8),
+                                CustomTextFormField(
+                                  onSaved: (p0) {
+                                    productDetail = p0;
+                                  },
+                                  hintTex: "Ürün Detayı",
+                                  maxLines: 3,
+                                  // validator: (p0) {
+                                  //   if (p0!.isEmpty) {
+                                  //     return "Lütfen  giriniz";
+                                  //   }
+                                  //   return null;
+                                  // },
+                                ),
+                              ],
+                            )),
+                      ),
+                      CustomButtonBar(
+                        onPressed: () {
+                          if (productFormKey.currentState!.validate()) {
+                            productFormKey.currentState!.save();
+                            databaseHelper!
+                                .addProduct(Product(
+                                    categoryId: categoryId,
+                                    productName: productName,
+                                    productLink: productLink,
+                                    productPrice: productPrice,
+                                    productImport: productImport,
+                                    productExplane: productDetail,
+                                    productCreateDate: productDate.toString()))
+                                .then((value) {
+                              Navigator.pop(context);
+                            }).then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: appColors!.primaryColor,
+                                  content: const Text(
+                                      "Başarılı eklendi.. sayfayı yenileyiniz"),
+                                ),
+                              );
+                            });
+                            //must add fonction
+                            print("ürün ekleniyor...");
+                          }
+                          setState(() {});
+                        },
+                        text0: "Vazgeç",
+                        text1: "EKLE",
+                      )
+                    ],
+                  );
                 },
               );
             },
@@ -156,7 +295,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 8.w),
                                       child: CustomToDoBox(
-                                          product: product,
+                                          productId:
+                                              allProduct[index].productId,
                                           btnOkOnPress: () => deleteProduct(
                                               allProduct[index].productId),
                                           price: allProduct[index].productPrice,
@@ -191,6 +331,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  List<DropdownMenuItem<int>>? categoryItems() {
+    return allCategory //tumKategorileri DropDownMenuItem lara dönüştürüyoruz
+        .map((category) => DropdownMenuItem<int>(
+            value: category.categoryId,
+            child: Text(
+              category.categoryName.toString(),
+              style: const TextStyle(fontSize: 16),
+            )))
+        .toList();
   }
 
   deleteProduct(int? notID) {

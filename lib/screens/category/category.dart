@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:my_links/constants/colors.dart';
 import 'package:my_links/constants/space/vertical_space.dart';
 import 'package:my_links/constants/text_style.dart';
-import 'package:my_links/screens/product/product_detail_screen.dart';
 import 'package:my_links/utils/database_helper.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/general_widgets/custom_back_button.dart';
 import '../../model/category.dart';
 
 class CategoryScreen extends StatefulWidget {
