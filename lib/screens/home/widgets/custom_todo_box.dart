@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:my_links/model/product.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:my_links/constants/colors.dart';
-import 'package:my_links/constants/general_widgets/slide_page_route.dart';
 import 'package:my_links/constants/text_style.dart';
 import 'package:my_links/screens/product/product_detail_screen.dart';
 
@@ -21,6 +21,7 @@ class CustomToDoBox extends StatefulWidget {
     required this.detail,
     required this.btnOkOnPress,
     required this.productId,
+    required this.product,
     this.price,
   }) : super(key: key);
   bool tick = false;
@@ -32,6 +33,7 @@ class CustomToDoBox extends StatefulWidget {
   final String detail;
   final int? productId;
   void Function()? btnOkOnPress;
+  Product product;
   @override
   State<CustomToDoBox> createState() => _CustomToDoBoxState();
 }
@@ -42,20 +44,7 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
     return InkWell(
       onTap: () {
         print("tıklandı");
-        Navigator.push(
-          context,
-          SlidePageRoute(
-            page: ProductDetailScreen(
-              productId: widget.productId,
-              price: widget.price,
-              date: widget.date,
-              import: widget.import,
-              name: widget.name,
-              link: widget.link,
-              detail: widget.detail,
-            ),
-          ),
-        );
+        _detailGo(context, widget.product);
       },
       child: Container(
         height: 10.h,
@@ -198,5 +187,21 @@ class _CustomToDoBoxState extends State<CustomToDoBox> {
         ),
       ),
     );
+  }
+
+  _detailGo(BuildContext context, Product product) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(
+                  product: product,
+                  productId: widget.productId,
+                  price: widget.price,
+                  date: widget.date,
+                  import: widget.import,
+                  name: widget.name,
+                  link: widget.link,
+                  detail: widget.detail,
+                )));
   }
 }

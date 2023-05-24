@@ -17,9 +17,8 @@ class AppColors {
   final Color blackColor = const Color(0xFF000000);
   final Color transparentColor = const Color(0x00101828);
   final Color primaryColor = const Color(0xFF1AB8DB);
-
+  final Color backgrouncColor = const Color(0xDCDCE4E6);
   final Color todoColor = const Color(0xFFEEEEEE);
-
   final Color tickColor = const Color(0xFF00C938);
   final Color redColor = const Color(0xFFFF0404);
   final Color yellowColor = const Color(0xFFE1FF00);

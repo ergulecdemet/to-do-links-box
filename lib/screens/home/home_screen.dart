@@ -295,6 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 8.w),
                                       child: CustomToDoBox(
+                                          product: allProduct[index],
                                           productId:
                                               allProduct[index].productId,
                                           btnOkOnPress: () => deleteProduct(

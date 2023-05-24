@@ -15,7 +15,7 @@ import 'package:my_links/constants/text_style.dart';
 import '../../utils/database_helper.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({
+  ProductDetailScreen({
     Key? key,
     required this.name,
     required this.import,
@@ -23,6 +23,7 @@ class ProductDetailScreen extends StatefulWidget {
     required this.link,
     required this.detail,
     required this.productId,
+    required this.product,
     this.price,
   }) : super(key: key);
   final String name;
@@ -32,7 +33,7 @@ class ProductDetailScreen extends StatefulWidget {
   final int? price;
   final String detail;
   final int? productId;
-
+  Product product;
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
@@ -148,7 +149,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     updateFormKey.currentState!.save();
                                     databaseHelper
                                         ?.productUpdate(Product.withID(
-                                          productId: widget.productId,
+                                          productId: widget.product.productId,
                                           categoryId: categoryId,
                                           productName: widget.name,
                                           productLink: widget.link,
