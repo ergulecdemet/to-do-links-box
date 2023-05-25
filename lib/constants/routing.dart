@@ -20,7 +20,7 @@ class RouteGenerator {
     switch (settings.name) {
       //must be splash screen
       case "/":
-        return createRoute(const OnboardingScreen(), settings);
+        return createRoute(const HomeScreen(), settings);
       case "/onboarding":
         return createRoute(const OnboardingScreen(), settings);
       case "/home":

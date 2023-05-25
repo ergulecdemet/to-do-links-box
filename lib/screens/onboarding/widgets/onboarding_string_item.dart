@@ -18,8 +18,8 @@ class OnboradingScreenItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const VerticalSpace(height: 50),
         Image.asset(
           imagePath,
           height: 30.h,
@@ -41,7 +41,7 @@ class OnboradingScreenItem extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             style: appTextStyles!
-                .sp18(context, appColors!.blackColor, FontWeight.w500),
+                .sp18(context, appColors!.whiteColor, FontWeight.w500),
           ),
         ),
       ],

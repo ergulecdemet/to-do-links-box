@@ -24,7 +24,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       subtitle: "ARTIK AKLINDA TUTMANA GEREK YOK :)",
     ),
     OnboradingScreenItem(
-      imagePath: "assets/images/tick.png",
+      imagePath: "assets/images/todo.png",
       title: "10,000+ Kullanıcı!",
       subtitle: "HAYDİ SENDE KENDİ LİNK KUTUNU OLUŞTUR İHTİYAÇLARI UNUTMA... ",
     ),
@@ -99,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               shape: BoxShape.circle,
               color: currentPage == i
                   ? appColors!.primaryColor
-                  : appColors!.blackColor.withOpacity(0.3),
+                  : appColors!.whiteColor,
             ),
           ),
         ),

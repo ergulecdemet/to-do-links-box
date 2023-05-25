@@ -38,7 +38,7 @@ class _OnboardingNextPageRowState extends State<OnboardingNextPageRow> {
           child: Text(
             "Geç",
             style: appTextStyles!
-                .sp14(context, appColors!.greyTextColor, FontWeight.w500),
+                .sp14(context, appColors!.todoColor, FontWeight.w500),
           ),
         ),
         Row(

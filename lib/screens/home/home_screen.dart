@@ -29,13 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> allProduct = [];
   List<MyCategory> allCategory = [];
   int? categoryId = 1;
-  late String productName;
+  String? productName;
   String? productLink;
   String? productDetail;
   int? productPrice = 0;
   int? productImport = 0;
   String productDate = DateTime.now().toString();
-
   DatabaseHelper? databaseHelper;
 
   Future<void> refreshPage() async {
@@ -50,9 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
     databaseHelper = DatabaseHelper();
     List allProduct = <Product>[];
     List allCategory = <MyCategory>[];
+    databaseHelper!.getCategory().then((kategoriIcerenMapListesi) {
+      //Future olduğu için then yapısını kullanıyoruz
+      for (Map okunanMap in kategoriIcerenMapListesi) {
+        allCategory.add(MyCategory.fromMap(okunanMap as Map<String, dynamic>));
+      }
+
+      setState(() {});
+    });
     totalPrice();
     refreshPage();
-    setState(() {});
   }
 
   var productFormKey = GlobalKey<FormState>();
@@ -98,30 +104,36 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Wrap(
                               runSpacing: 2.h,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 24,
-                                  ),
-                                  margin: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: const Color.fromARGB(
-                                              255, 27, 23, 23),
-                                          width: 1),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                    items: categoryItems(),
-                                    value: categoryId,
-                                    onChanged: (selectCategoryID) {
-                                      setState(() {
-                                        categoryId = selectCategoryID!;
-                                      });
-                                    },
-                                  )),
-                                ),
+                                // Container(
+                                //   padding: const EdgeInsets.symmetric(
+                                //     vertical: 4,
+                                //     horizontal: 24,
+                                //   ),
+                                //   margin: const EdgeInsets.all(12),
+                                //   decoration: BoxDecoration(
+                                //       border: Border.all(
+                                //           color: appColors!.primaryColor,
+                                //           width: 1),
+                                //       borderRadius: const BorderRadius.all(
+                                //           Radius.circular(10))),
+                                //   child: DropdownButtonHideUnderline(
+                                //     child: DropdownButton<int>(
+                                //       value: categoryId,
+                                //       items: allCategory.map((e) {
+                                //         return DropdownMenuItem<int>(
+                                //           value: e.categoryId,
+                                //           child:
+                                //               Text(e.categoryName.toString()),
+                                //         );
+                                //       }).toList(),
+                                //       onChanged: (value) {
+                                //         setState(() {
+                                //           categoryId = value;
+                                //         });
+                                //       },
+                                //     ),
+                                //   ),
+                                // ),
                                 CustomTextFormField(
                                   hintTex: "Ürün Linki ( https:// )",
                                   onSaved: (p0) {
@@ -151,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 CustomTextFormField(
                                   hintTex: "Ürün Fiyatı",
+                                  keyboardType: TextInputType.number,
                                   onSaved: (p0) {
                                     productPrice = int.parse(p0!);
                                   },
